@@ -1,0 +1,54 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyd
+*.so
+*.egg-info/
+*.egg
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# Environment files
+.env
+.env.*
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Streamlit
+.streamlit/
+
+# Logs and temp
+*.log
+*.tmp
+*.bak
+*.swp
+.DS_Store
+
+# Build artifacts
+build/
+dist/
+
+# Test and coverage
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# IDE
+.vscode/
+.idea/
+
+# Model/data caches
+.cache/
+models/
+faiss_index/
+
+# PDFs, transcripts, and uploads (optional, keep if you want to version data)
+/uploads/
+/data/
