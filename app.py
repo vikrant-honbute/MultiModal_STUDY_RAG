@@ -3,12 +3,12 @@ import tempfile
 
 import streamlit as st
 
-from src.agents.retrieval import RetrievalAgent
 from src.config import AppConfig
 from src.ingestion.notes import load_notes
 from src.ingestion.pdf import load_pdf
 from src.ingestion.transcript import load_transcript
 from src.ingestion.youtube import load_youtube
+from src.pipeline import PipelineInput, RAGPipeline
 from src.vectorstore.faiss_store import FaissStore
 
 
@@ -80,6 +80,11 @@ def main() -> None:
             index=1,
         )
         top_k = st.slider("Top-k retrieval", min_value=1, max_value=10, value=5)
+        plan_days = 7
+        if task == "Study Plan":
+            plan_days = st.number_input(
+                "Plan length (days)", min_value=1, max_value=30, value=7
+            )
         st.text_input("Optional access key", type="password", disabled=True)
 
     tab_ingest, tab_ask, tab_tools, tab_settings = st.tabs(
@@ -128,24 +133,32 @@ def main() -> None:
 
     with tab_ask:
         st.subheader("Ask a question")
-        question = st.text_input("Question")
-        if st.button("Run Retrieval"):
+        question = st.text_input("Question or focus (optional)")
+        if st.button("Run Pipeline"):
             store = st.session_state.get("store")
             if not store:
                 st.warning("Please build the index first.")
-            elif not question:
-                st.warning("Enter a question.")
             else:
-                agent = RetrievalAgent(store)
-                results = agent.run(question, k=top_k)
-                if not results:
-                    st.info("No results found.")
-                for idx, chunk in enumerate(results, start=1):
-                    st.markdown(
-                        f"**Result {idx}** — {chunk.source_type} / {chunk.source_id}"
-                    )
-                    st.write(chunk.content)
-                    st.json(chunk.metadata)
+                pipeline = RAGPipeline(store)
+                try:
+                    with st.spinner("Running pipeline..."):
+                        result = pipeline.run(
+                            PipelineInput(
+                                task=task,
+                                question=question,
+                                difficulty=difficulty,
+                                top_k=top_k,
+                                plan_days=int(plan_days),
+                            )
+                        )
+                except Exception as exc:
+                    st.error(f"Pipeline error: {exc}")
+                else:
+                    st.subheader("Output")
+                    st.write(result.content)
+                    if result.citations:
+                        st.subheader("Citations")
+                        st.json(result.citations)
 
     with tab_tools:
         st.subheader("Generate study outputs")
