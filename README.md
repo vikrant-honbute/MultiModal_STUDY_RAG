@@ -23,6 +23,20 @@ Build study materials (summaries, quizzes, flashcards, timestamps, study plans) 
 - `EMBEDDING_MODEL`: Embedding model id
 - `LLM_MODEL`: LLM id for generation
 
+Local embeddings (optional)
+
+- To run embeddings locally (no HF API), set `USE_LOCAL_EMBEDDINGS=1` in your `.env` and install `sentence-transformers` and `torch`.
+- Example `.env` entries:
+  - `USE_LOCAL_EMBEDDINGS=1`
+  - `LOCAL_EMBEDDING_MODEL=sentence-transformers/all-MiniLM-L6-v2`
+
+Run a quick local embedding test:
+
+```bash
+pip install -r requirements.txt
+python -m src.tools.test_embeddings
+```
+
 ## Run locally
 
 1. Create and activate a venv.

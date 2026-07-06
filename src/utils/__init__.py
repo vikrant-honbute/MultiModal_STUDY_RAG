@@ -1,1 +1,1 @@
-__all__ = ["chunking", "logging", "prompting"]
+__all__ = ["chunking", "logging", "prompting", "rendering"]

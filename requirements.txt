@@ -2,7 +2,12 @@ streamlit==1.38.0
 pydantic==2.8.2
 python-dotenv==1.0.1
 pypdf==4.2.0
-youtube-transcript-api==0.6.2
+youtube-transcript-api>=0.6.2
 numpy>=1.26.4,<3
 huggingface-hub==0.24.5
+# faiss-cpu is excluded on Windows by default; install manually with: pip install faiss-cpu
 faiss-cpu==1.8.0; platform_system != "Windows"
+sentence-transformers>=2.2.2
+torch>=2.2.0
+pandas>=2.0.0
+google-genai>=1.0.0
